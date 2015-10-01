@@ -1,9 +1,13 @@
 {
-  "name": "your-vendor-name/package-name",
-  "description": "A short description of what your package does",
+  "name": "redneck1/silex-cookie-provider",
+  "description": "A couple of classes to provide access to cookies with no bullets in feet",
 
   "require": {
     "silex/silex": "~1.3"
+  },
+
+  "require-dev": {
+    "phpunit/phpunit": "~4.1"
   },
 
   "autoload": {

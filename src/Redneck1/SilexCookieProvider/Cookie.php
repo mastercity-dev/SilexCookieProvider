@@ -57,6 +57,10 @@ class Cookie
      */
     public function set($key, $value, $expires = 86400, $path = '/', $domain = false)
     {
+        if (!isset($_SERVER['HTTP_HOST'])) {
+            throw new \LogicException("Can't set cookie because no browser is behind this request.");
+        }
+
         if (!$domain) {
             $domain = $_SERVER['HTTP_HOST'];
         }
