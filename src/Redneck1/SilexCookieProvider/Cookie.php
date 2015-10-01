@@ -69,7 +69,7 @@ class Cookie
 
         setcookie($key, $value, $expires, $path, $domain);
 
-        if ($this->get($key) && $this->get($key) === $value) {
+        if ($this->get($key) === $value) {
             return true;
         }
 
