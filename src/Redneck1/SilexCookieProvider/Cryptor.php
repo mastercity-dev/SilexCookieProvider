@@ -15,6 +15,9 @@ class Cryptor
 {
     protected $salt;
 
+    /**
+     * @param $salt
+     */
     public function __construct($salt)
     {
         if (!$salt || gettype($salt) !== 'string') {
@@ -24,6 +27,10 @@ class Cryptor
         $this->salt = $salt;
     }
 
+    /**
+     * @param $string
+     * @return string
+     */
     public function encrypt($string)
     {
         $encrypted = openssl_encrypt($string, 'aes128', $this->salt);
@@ -31,6 +38,10 @@ class Cryptor
         return rtrim($encrypted, '==');
     }
 
+    /**
+     * @param $encrypted
+     * @return string
+     */
     public function decrypt($encrypted)
     {
         $encrypted = $encrypted . '==';
