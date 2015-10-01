@@ -3,7 +3,8 @@
   "description": "A couple of classes to provide access to cookies with no bullets in feet",
 
   "require": {
-    "silex/silex": "~1.3"
+    "silex/silex": "~1.3",
+    "defuse/php-encryption": "^1.2"
   },
 
   "require-dev": {

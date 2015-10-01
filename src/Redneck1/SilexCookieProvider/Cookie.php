@@ -11,8 +11,19 @@
 
 namespace Redneck1\SilexCookieProvider;
 
+use Crypto;
+
 class Cookie
 {
+    private $salt = null;
+
+    public function __construct($salt = null)
+    {
+        if (null !== $salt) {
+            $this->salt = $salt;
+        }
+    }
+
     /**
      * @param string $key
      * @return string
@@ -87,5 +98,68 @@ class Cookie
         }
 
         return false;
+    }
+
+    public function setEncrypted($key, $value, $expires = 86400, $path = '/', $domain = false)
+    {
+        if (null === $this->salt) {
+            throw new \LogicException("Can't set encrypted cookie as no salt was specified.");
+        }
+
+        $cryptor = new Cryptor($this->salt);
+
+        $encryptedKey = $cryptor->encrypt($key);
+        $encryptedValue = $cryptor->encrypt($value);
+
+        return $this->set($encryptedKey, $encryptedValue, $expires = 86400, $path = '/', $domain = false);
+    }
+
+    public function getAllDecrypted()
+    {
+        if (null === $this->salt) {
+            throw new \LogicException("Can't decrypt cookie as no salt was specified.");
+        }
+
+        $cryptor = new Cryptor($this->salt);
+        $decrypted = [];
+
+        foreach ($_COOKIE as $key => $value) {
+            $decryptedKey = $cryptor->decrypt($key);
+            $decryptedValue = $cryptor->decrypt($value);
+
+            $decrypted[$decryptedKey] = $decryptedValue;
+        }
+
+        return $decrypted;
+    }
+
+    public function hasEncrypted($key)
+    {
+        if (null === $this->salt) {
+            throw new \LogicException("Can't encrypt cookie key as no salt was specified.");
+        }
+
+        $cryptor = new Cryptor($this->salt);
+        $cryptedKey = $cryptor->encrypt($key);
+
+        return isset($_COOKIE[$cryptedKey]) ? true : false;
+    }
+
+    public function getEncrypted($key)
+    {
+        if (null === $this->salt) {
+            throw new \LogicException("Can't decrypt cookie as no salt was specified.");
+        }
+
+        $cryptor = new Cryptor($this->salt);
+        $cryptedKey = $cryptor->encrypt($key);
+
+        if (!isset($_COOKIE[$cryptedKey])) {
+            return '';
+        }
+
+        $cryptedValue = $_COOKIE[$cryptedKey];
+
+        return $cryptor->decrypt($cryptedValue);
     }
 }

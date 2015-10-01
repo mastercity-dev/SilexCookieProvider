@@ -16,16 +16,34 @@ use Silex\ServiceProviderInterface;
 
 class SilexCookieProvider implements ServiceProviderInterface
 {
+    private $salt;
+
+    /**
+     * @param array $options
+     */
+    public function __construct($options = [])
+    {
+        if (isset($options['salt'])) {
+            if (gettype($options['salt']) !== 'string') {
+                throw new \InvalidArgumentException(sprintf("Salt must be a string, %s given", gettype($options['salt'])));
+            }
+
+            $this->salt = $options['salt'];
+        }
+    }
     /**
      * @param Application $app
      */
     public function register(Application $app)
     {
         $app['cookie'] = $app->share(function() {
-            return new Cookie;
+            return new Cookie($this->salt);
         });
     }
 
+    /**
+     * @param Application $app
+     */
     public function boot(Application $app)
     {
 
