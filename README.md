@@ -29,10 +29,10 @@ $app['cookie']->getAll();
 $app['cookie']->set($key, $value, $expires = 86400, $path = '/', $domain = false);
 $app['cookie']->has($key);
 $app['cookie']->remove($key);
+$app['cookie']->removeAll();
 ```
 
-## Future plans
-Encrypted cookies.
+## Encrypted cookies
 
 ```
 $app['cookie']->getEncrypted($key);
