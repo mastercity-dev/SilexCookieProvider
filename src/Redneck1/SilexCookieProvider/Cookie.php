@@ -89,7 +89,7 @@ class Cookie
 
     /**
      * @param string $key
-     * @return bool|false;
+     * @return bool;
      */
     public function remove($key)
     {
@@ -100,6 +100,24 @@ class Cookie
         return false;
     }
 
+    /**
+     *  * @return bool;
+     */
+    public function removeAll()
+    {
+        foreach ($_COOKIE as $key => $value) {
+            $this->remove($key);
+        }
+    }
+
+    /**
+     * @param $key
+     * @param $value
+     * @param int $expires
+     * @param string $path
+     * @param false|string $domain
+     * @return bool
+     */
     public function setEncrypted($key, $value, $expires = 86400, $path = '/', $domain = false)
     {
         if (null === $this->salt) {
@@ -111,9 +129,12 @@ class Cookie
         $encryptedKey = $cryptor->encrypt($key);
         $encryptedValue = $cryptor->encrypt($value);
 
-        return $this->set($encryptedKey, $encryptedValue, $expires = 86400, $path = '/', $domain = false);
+        return $this->set($encryptedKey, $encryptedValue, $expires, $path, $domain);
     }
 
+    /**
+     * @return array
+     */
     public function getAllDecrypted()
     {
         if (null === $this->salt) {
@@ -133,6 +154,10 @@ class Cookie
         return $decrypted;
     }
 
+    /**
+     * @param string $key
+     * @return bool
+     */
     public function hasEncrypted($key)
     {
         if (null === $this->salt) {
@@ -145,6 +170,10 @@ class Cookie
         return isset($_COOKIE[$cryptedKey]) ? true : false;
     }
 
+    /**
+     * @param string $key
+     * @return string
+     */
     public function getEncrypted($key)
     {
         if (null === $this->salt) {
