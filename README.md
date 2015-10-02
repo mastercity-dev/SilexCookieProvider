@@ -19,6 +19,10 @@ use Redneck1\SilexCookieProvider\SilexCookieProvider;
 use Symfony\Component\HttpFoundation\Response;
 
 $app->register(new SilexCookieProvider());
+// or if you want to use cookie encryption
+$app->register(new SilexCookieProvider([
+  "salt" => "somesecretsecret"
+]));
 
 $app->get('/get/{key}', function() use ($app) {
   return new Response(
