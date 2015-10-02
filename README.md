@@ -1,6 +1,12 @@
 # SilexCookieProvider
 A couple of classes to provide access to cookies with no bullets in feet.
 
+## Installation
+
+```
+$ php composer.phar require redneck1/silex-cookie-provider
+```
+
 ## Example
 
 ```
