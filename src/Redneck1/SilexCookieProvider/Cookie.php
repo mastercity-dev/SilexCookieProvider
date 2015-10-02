@@ -11,8 +11,6 @@
 
 namespace Redneck1\SilexCookieProvider;
 
-use Crypto;
-
 class Cookie
 {
     private $salt = null;
@@ -133,28 +131,6 @@ class Cookie
     }
 
     /**
-     * @return array
-     */
-    public function getAllDecrypted()
-    {
-        if (null === $this->salt) {
-            throw new \LogicException("Can't decrypt cookie as no salt was specified.");
-        }
-
-        $cryptor = new Cryptor($this->salt);
-        $decrypted = [];
-
-        foreach ($_COOKIE as $key => $value) {
-            $decryptedKey = $cryptor->decrypt($key);
-            $decryptedValue = $cryptor->decrypt($value);
-
-            $decrypted[$decryptedKey] = $decryptedValue;
-        }
-
-        return $decrypted;
-    }
-
-    /**
      * @param string $key
      * @return bool
      */
@@ -190,5 +166,21 @@ class Cookie
         $cryptedValue = $_COOKIE[$cryptedKey];
 
         return $cryptor->decrypt($cryptedValue);
+    }
+
+    /**
+     * @param string $key
+     * @return bool
+     */
+    public function removeEncrypted($key)
+    {
+        if (null === $this->salt) {
+            throw new \LogicException("Can't decrypt cookie key as no salt was specified.");
+        }
+
+        $cryptor = new Cryptor($this->salt);
+        $cryptedKey = $cryptor->encrypt($key);
+
+        return $this->remove($cryptedKey);
     }
 }
